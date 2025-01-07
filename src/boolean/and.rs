@@ -49,25 +49,17 @@ impl<F: PrimeField> Boolean<F> {
     /// ```
     #[tracing::instrument(target = "r1cs")]
     pub fn kary_and(bits: &[Self]) -> Result<Self, SynthesisError> {
-        println!("kary_and: {:?}", bits.len());
         assert!(!bits.is_empty());
-        if bits.len() <= 3 {
-            let mut cur: Option<Self> = None;
-            for next in bits {
-                cur = if let Some(b) = cur {
-                    Some(b & next)
-                } else {
-                    Some(next.clone())
-                };
-            }
-
-            Ok(cur.expect("should not be 0"))
-        } else {
-            // b0 & b1 & ... & bN == 1 if and only if sum(b0, b1, ..., bN) == N
-            let sum_bits: FpVar<_> = bits.iter().map(|b| FpVar::from(b.clone())).sum();
-            let num_bits = FpVar::Constant(F::from(bits.len() as u64));
-            sum_bits.is_eq(&num_bits)
+        let mut cur: Option<Self> = None;
+        for next in bits {
+            cur = if let Some(b) = cur {
+                Some(b & next)
+            } else {
+                Some(next.clone())
+            };
         }
+
+        Ok(cur.expect("should not be 0"))
     }
 
     /// Outputs `!(bits[0] & bits[1] & ... & bits.last().unwrap())`.

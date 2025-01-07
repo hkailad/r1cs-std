@@ -1109,14 +1109,10 @@ impl<'a, F: PrimeField> Sum<FpVar<F>> for FpVar<F> {
         let mut sum_constants = F::zero();
         let sum_variables = FpVar::Var(AllocatedFp::<F>::add_many(iter.filter_map(|x| match x {
             FpVar::Constant(c) => {
-                println!("in iter: constant");
                 sum_constants += c;
                 None
             },
-            FpVar::Var(v) => {
-                println!("in iter: var");
-                Some(v)
-            },
+            FpVar::Var(v) => Some(v),
         })));
 
         let sum = sum_variables + sum_constants;
