@@ -49,6 +49,7 @@ impl<F: PrimeField> Boolean<F> {
     /// ```
     #[tracing::instrument(target = "r1cs")]
     pub fn kary_and(bits: &[Self]) -> Result<Self, SynthesisError> {
+        println!("kary_and: {:?}", bits.len());
         assert!(!bits.is_empty());
         if bits.len() <= 3 {
             let mut cur: Option<Self> = None;
