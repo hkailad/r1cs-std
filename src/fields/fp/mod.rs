@@ -167,6 +167,7 @@ impl<F: PrimeField> AllocatedFp<F> {
         let mut new_lc = lc!();
 
         let mut num_iters = 0;
+
         for variable in iter {
             let variable = variable.borrow();
             if !variable.cs.is_none() {
@@ -1092,10 +1093,14 @@ impl<'a, F: PrimeField> Sum<&'a FpVar<F>> for FpVar<F> {
         let mut sum_constants = F::zero();
         let sum_variables = FpVar::Var(AllocatedFp::<F>::add_many(iter.filter_map(|x| match x {
             FpVar::Constant(c) => {
+                println!("in iter: constant");
                 sum_constants += c;
                 None
             },
-            FpVar::Var(v) => Some(v),
+            FpVar::Var(v) => {
+                println!("in iter: var");
+                Some(v)
+            },
         })));
 
         let sum = sum_variables + sum_constants;
